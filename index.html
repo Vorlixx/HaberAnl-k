@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaberAnlık - Canlı Küresel Haber Takip</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- İkonlar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Merriweather:wght@300;400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Okuma Modu için Serif Font */
+        .prose-text { font-family: 'Merriweather', serif; }
+
+        /* Haber kartı animasyonları */
+        .news-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .blink-red { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* Aktif Sekme Stili */
+        .tab-active { background-color: #dc2626; color: white; border-color: #dc2626; }
+        .tab-inactive { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+        .tab-inactive:hover { background-color: #f3f4f6; }
+
+        /* Modal Animasyonu */
+        .modal { transition: opacity 0.25s ease; }
+        body.modal-active { overflow: hidden; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { bg-gray-100; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Üst Bar -->
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
+                <div class="w-10 h-10 bg-red-600 rounded flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    H
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900 leading-none">Haber<span class="text-red-600">Anlık</span></h1>
+                    <div class="flex items-center gap-1 text-[10px] uppercase font-bold text-red-600 mt-0.5">
+                        <span class="w-2 h-2 bg-red-600 rounded-full blink-red"></span>
+                        CANLI VERİ AKIŞI
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-gray-500 hidden md:block" id="last-updated">
+                Son Güncelleme: Bekleniyor...
+            </div>
+        </div>
+    </header>
+
+    <!-- Arama ve Kontrol Paneli -->
+    <section class="bg-white border-b border-gray-200 py-6">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Ana Sekmeler (Popüler vs En Son) -->
+            <div class="flex justify-center mb-6 gap-4">
+                <button id="btn-popular" onclick="switchTab('popular')" 
+                    class="px-6 py-2 rounded-full border font-semibold transition-all shadow-sm tab-active flex items-center gap-2">
+                    <i class="fa-solid fa-fire"></i> En Popüler
+                </button>
+                <button id="btn-latest" onclick="switchTab('latest')" 
+                    class="px-6 py-2 rounded-full border font-semibold transition-all shadow-sm tab-inactive flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i> En Son (Türkiye)
+                </button>
+            </div>
+
+            <div class="relative shadow-sm">
+                <input type="text" id="search-input" 
+                    class="w-full pl-12 pr-32 py-4 rounded-lg border-2 border-gray-200 focus:border-red-600 focus:ring-0 text-lg transition-colors outline-none"
+                    placeholder="Konu ara (Örn: Trump, Ekonomi, Galatasaray)..." 
+                    onkeypress="handleEnter(event)">
+                
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
+                
+                <button onclick="performSearch()" 
+                    class="absolute right-2 top-2 bottom-2 bg-red-600 hover:bg-red-700 text-white px-6 rounded-md font-semibold transition-colors flex items-center gap-2">
+                    ARA
+                </button>
+            </div>
+            
+            <div class="text-center mt-2 text-xs text-gray-400">
+                <i class="fa-solid fa-arrows-rotate mr-1"></i> Sayfa her 5 dakikada bir otomatik yenilenir.
+            </div>
+        </div>
+    </section>
+
+    <!-- Haber İçeriği -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        <div class="flex items-center justify-between mb-6">
+            <h2 id="result-title" class="text-2xl font-bold text-gray-800 border-l-4 border-red-600 pl-3">
+                Gündem Manşetleri
+            </h2>
+            <div id="loading-spinner" class="hidden">
+                <i class="fa-solid fa-circle-notch fa-spin text-red-600 text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- Haber Grid -->
+        <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Haberler JS ile buraya gelecek -->
+        </div>
+
+        <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+            <strong class="font-bold">Hata!</strong>
+            <span class="block sm:inline">Haberler yüklenirken bir sorun oluştu.</span>
+        </div>
+    </main>
+
+    <!-- OKUMA MODU MODALI (POPUP) -->
+    <div id="read-modal" class="modal fixed w-full h-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster hidden bg-black/80 backdrop-blur-sm">
+        <div class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-3xl mx-auto rounded shadow-lg z-50 overflow-y-auto max-h-[90vh]">
+            
+            <div class="modal-content text-left">
+                <!-- Header -->
+                <div class="flex justify-between items-center pb-3 px-6 py-4 bg-gray-50 border-b">
+                    <p class="text-2xl font-bold text-gray-800">Haber Özeti</p>
+                    <div class="modal-close cursor-pointer z-50" onclick="closeModal()">
+                        <i class="fa-solid fa-xmark text-2xl text-gray-500 hover:text-red-600"></i>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="px-6 py-4">
+                    <img id="modal-image" class="w-full h-64 object-cover rounded-lg mb-6 shadow-md" src="" alt="Haber Detay">
+                    
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                        <span id="modal-source" class="font-bold text-red-600"></span>
+                        <span>•</span>
+                        <span id="modal-date"></span>
+                    </div>
+
+                    <h2 id="modal-title" class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-tight font-serif"></h2>
+                    
+                    <!-- Kısaltılmış Metin Alanı -->
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                        <p class="text-sm text-yellow-800 font-bold mb-1">Hızlı Bakış (Özet):</p>
+                        <div id="modal-summary" class="prose-text text-lg text-gray-700 leading-relaxed">
+                            <!-- İçerik buraya gelecek -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex justify-end pt-2 px-6 py-4 bg-gray-50 border-t gap-3">
+                    <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 p-3 rounded-lg text-gray-700 hover:bg-gray-300 transition">Kapat</button>
+                    <a id="modal-link" href="#" target="_blank" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center shadow-md font-semibold">
+                        Haberin Tamamını Kaynağında Oku <i class="fa-solid fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center mt-auto">
+        <p>© 2026 HaberAnlık. Google News altyapısı kullanılmaktadır.</p>
+    </footer>
+
+    <!-- JAVASCRIPT KODLARI -->
+    <script>
+        let currentMode = 'popular'; 
+        let currentQuery = '';
+        let autoRefreshInterval;
+        let allNewsData = []; // Haberleri saklamak için
+
+        window.onload = function() {
+            switchTab('popular');
+            startAutoRefresh();
+        };
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => { refreshCurrentView(); }, 300000);
+        }
+
+        function refreshCurrentView() {
+            if (currentMode === 'search') performSearch();
+            else switchTab(currentMode);
+        }
+
+        function switchTab(mode) {
+            currentMode = mode;
+            document.getElementById('search-input').value = '';
+            
+            const btnPopular = document.getElementById('btn-popular');
+            const btnLatest = document.getElementById('btn-latest');
+
+            if (mode === 'popular') {
+                btnPopular.className = btnPopular.className.replace('tab-inactive', 'tab-active');
+                btnLatest.className = btnLatest.className.replace('tab-active', 'tab-inactive');
+                fetchNews(null, 'HEADLINES');
+            } else {
+                btnLatest.className = btnLatest.className.replace('tab-inactive', 'tab-active');
+                btnPopular.className = btnPopular.className.replace('tab-active', 'tab-inactive');
+                fetchNews(null, 'NATION');
+            }
+        }
+
+        function handleEnter(e) { if (e.key === 'Enter') performSearch(); }
+
+        function performSearch() {
+            const query = document.getElementById('search-input').value;
+            if (query.trim() !== "") {
+                currentMode = 'search';
+                currentQuery = query;
+                document.getElementById('btn-popular').className = document.getElementById('btn-popular').className.replace('tab-active', 'tab-inactive');
+                document.getElementById('btn-latest').className = document.getElementById('btn-latest').className.replace('tab-active', 'tab-inactive');
+                fetchNews(query, 'SEARCH');
+            }
+        }
+
+        // --- MODAL İŞLEMLERİ ---
+        function openModal(index) {
+            const item = allNewsData[index];
+            if (!item) return;
+
+            let tempDiv = document.createElement("div");
+            tempDiv.innerHTML = item.description;
+            const links = tempDiv.getElementsByTagName('a');
+            for(let i=0; i<links.length; i++) {
+                if(links[i].innerText.includes('View full coverage') || links[i].innerText.includes('Google Haberler')) {
+                    links[i].remove(); 
+                }
+            }
+            
+            let summaryText = tempDiv.innerText || tempDiv.textContent;
+            if (summaryText.length < 5) summaryText = "Haber detayı için kaynağa gidiniz.";
+
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-source').innerText = item.sourceName;
+            document.getElementById('modal-date').innerText = item.timeStr;
+            
+            // Modal görseli için de aynısı geçerli
+            const imgEl = document.getElementById('modal-image');
+            imgEl.src = item.displayImage;
+            // Eğer yüklenemezse güvenli bir placeholder kullan (döngüye girmemesi için getRelevantPlaceholder çağırmıyoruz)
+            imgEl.onerror = function() { 
+                this.onerror = null; // Sonsuz döngü koruması
+                this.src = 'https://placehold.co/800x400/e2e8f0/64748b?text=Haber+Detay'; 
+            };
+
+            document.getElementById('modal-summary').innerText = summaryText;
+            document.getElementById('modal-link').href = item.link;
+
+            const modal = document.getElementById('read-modal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('read-modal');
+            modal.classList.add('hidden');
+            document.body.classList.remove('modal-active');
+        }
+
+        // --- GELİŞMİŞ ALAKALI GÖRSEL MOTORU ---
+        function getRelevantPlaceholder(text, index) {
+            const lowerText = text.toLowerCase();
+            let keywords = ""; 
+
+            // 1. Daha Detaylı Kelime Analizi
+            if (lowerText.includes('ekonomi') || lowerText.includes('dolar') || lowerText.includes('borsa') || lowerText.includes('altın') || lowerText.includes('faiz') || lowerText.includes('enflasyon')) keywords = "business,finance,money";
+            else if (lowerText.includes('siyaset') || lowerText.includes('meclis') || lowerText.includes('bakan') || lowerText.includes('erdoğan') || lowerText.includes('chp') || lowerText.includes('parti') || lowerText.includes('seçim')) keywords = "politics,parliament,conference";
+            else if (lowerText.includes('spor') || lowerText.includes('futbol') || lowerText.includes('galatasaray') || lowerText.includes('fenerbahçe') || lowerText.includes('beşiktaş') || lowerText.includes('gol') || lowerText.includes('transfer')) keywords = "sport,football,stadium";
+            else if (lowerText.includes('teknoloji') || lowerText.includes('yapay zeka') || lowerText.includes('apple') || lowerText.includes('telefon') || lowerText.includes('internet')) keywords = "technology,computer,code";
+            else if (lowerText.includes('deprem') || lowerText.includes('kaza') || lowerText.includes('yangın') || lowerText.includes('felaket')) keywords = "disaster,emergency,ambulance";
+            else if (lowerText.includes('hava') || lowerText.includes('kar') || lowerText.includes('yağmur') || lowerText.includes('fırtına')) keywords = "weather,rain,snow,storm";
+            else if (lowerText.includes('sağlık') || lowerText.includes('doktor') || lowerText.includes('hastane') || lowerText.includes('ilaç')) keywords = "health,hospital,doctor";
+            else if (lowerText.includes('eğitim') || lowerText.includes('okul') || lowerText.includes('sınav') || lowerText.includes('öğrenci')) keywords = "education,school,student";
+            else if (lowerText.includes('polis') || lowerText.includes('adliye') || lowerText.includes('suç') || lowerText.includes('operasyon')) keywords = "police,law,justice";
+            else if (lowerText.includes('magazin') || lowerText.includes('ünlü') || lowerText.includes('konser')) keywords = "concert,celebrity,music";
+            
+            // 2. Eğer özel bir kelime bulunamadıysa, çeşitlilik sağlamak için rastgele bir genel konu seç
+            if (keywords === "") {
+                const genericTopics = ["city", "journalism", "newspaper", "broadcast", "studio", "people", "meeting", "building", "street", "world", "traffic"];
+                // Index modunu kullanarak her haber için sabit ama farklı bir konu seç
+                keywords = genericTopics[index % genericTopics.length];
+            }
+
+            // 3. Benzersizlik (Hash)
+            // Başlıktaki harfleri sayıya çevirerek o habere özel bir sayı üretiyoruz.
+            // Bu sayede "lock" parametresi her haber için farklı olur ve görseller asla aynı gelmez.
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = ((hash << 5) - hash) + text.charCodeAt(i);
+                hash |= 0;
+            }
+            
+            // LoremFlickr servisi kullanılıyor. lock parametresi aynı habere her zaman aynı resmi, 
+            // farklı habere farklı resmi vermeyi garanti eder.
+            return `https://loremflickr.com/600/400/${encodeURIComponent(keywords)}?lock=${Math.abs(hash)}`;
+        }
+
+        // --- HABER ÇEKME ---
+        async function fetchNews(query, type) {
+            const grid = document.getElementById('news-grid');
+            const loader = document.getElementById('loading-spinner');
+            const errorMsg = document.getElementById('error-message');
+            const title = document.getElementById('result-title');
+            const updateTime = document.getElementById('last-updated');
+
+            loader.classList.remove('hidden');
+            grid.innerHTML = '';
+            errorMsg.classList.add('hidden');
+
+            if (type === 'HEADLINES') title.innerText = "Gündemdeki En Popüler Haberler";
+            else if (type === 'NATION') title.innerText = "Türkiye'den En Son Haberler";
+            else title.innerText = `"${query}" Arama Sonuçları`;
+
+            try {
+                let googleRssUrl = '';
+                const baseUrl = 'https://news.google.com/rss';
+                const params = 'hl=tr&gl=TR&ceid=TR:tr';
+
+                if (type === 'HEADLINES') googleRssUrl = `${baseUrl}?${params}`;
+                else if (type === 'NATION') googleRssUrl = `${baseUrl}/search?q=T%C3%BCrkiye&${params}`;
+                else googleRssUrl = `${baseUrl}/search?q=${encodeURIComponent(query)}&${params}`;
+
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(googleRssUrl)}`;
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    allNewsData = []; 
+
+                    data.items.forEach((item, index) => {
+                        // --- RESİM MANTIĞI ---
+                        let imageUrl = null;
+                        
+                        // 1. Gerçek Resmi Bul
+                        if (item.enclosure && item.enclosure.link) imageUrl = item.enclosure.link;
+                        if (!imageUrl && item.content) {
+                            const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                            if (imgMatch && imgMatch[1]) imageUrl = imgMatch[1];
+                        }
+                        if (!imageUrl && item.description) {
+                            const imgMatch = item.description.match(/<img[^>]+src="([^">]+)"/);
+                            if (imgMatch && imgMatch[1]) imageUrl = imgMatch[1];
+                        }
+                        
+                        // 2. Eğer gerçek resim yoksa, gelişmiş fonksiyonu çağır
+                        const fallbackImage = getRelevantPlaceholder(item.title, index);
+                        const displayImage = imageUrl || fallbackImage;
+
+                        // Tarih ve Kaynak
+                        const date = new Date(item.pubDate);
+                        const timeStr = date.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+                        const fullDateStr = date.toLocaleDateString('tr-TR');
+                        
+                        let sourceName = item.author || "Haber";
+                        let clearTitle = item.title;
+                        if (item.title.lastIndexOf('-') > -1) {
+                            sourceName = item.title.substring(item.title.lastIndexOf('-') + 1).trim();
+                            clearTitle = item.title.substring(0, item.title.lastIndexOf('-')).trim();
+                        }
+
+                        // Veriyi kaydet
+                        allNewsData.push({
+                            title: clearTitle,
+                            description: item.description, 
+                            link: item.link,
+                            displayImage: displayImage,
+                            sourceName: sourceName,
+                            timeStr: `${fullDateStr} - ${timeStr}`
+                        });
+
+                        const cardHTML = `
+                            <article class="news-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full group">
+                                <div class="relative h-56 bg-slate-100 overflow-hidden cursor-pointer" onclick="openModal(${index})">
+                                    <img src="${displayImage}" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/eee/999?text=G%C3%B6rsel+Yok';"
+                                         alt="Haber Görseli" 
+                                         class="w-full h-full object-cover transform transition duration-500 group-hover:scale-105">
+                                    <div class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg shadow-sm">
+                                        ${sourceName}
+                                    </div>
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-300 flex items-center justify-center">
+                                        <i class="fa-solid fa-book-open text-white opacity-0 group-hover:opacity-100 text-3xl drop-shadow-lg transform scale-50 group-hover:scale-100 transition duration-300"></i>
+                                    </div>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col">
+                                    <div class="flex items-center text-xs text-gray-500 mb-3 space-x-2">
+                                        <i class="fa-regular fa-clock text-red-600"></i>
+                                        <span class="font-medium">${timeStr}</span>
+                                    </div>
+                                    
+                                    <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug group-hover:text-red-600 transition cursor-pointer line-clamp-3" onclick="openModal(${index})">
+                                        ${clearTitle}
+                                    </h3>
+                                    
+                                    <div class="mt-auto pt-4 border-t border-gray-100 flex gap-2">
+                                        <button onclick="openModal(${index})" class="flex-1 bg-slate-100 hover:bg-slate-200 text-gray-800 py-2.5 rounded-lg transition text-sm font-semibold">
+                                            <i class="fa-solid fa-eye mr-1"></i> Oku (Özet)
+                                        </button>
+                                        <a href="${item.link}" target="_blank" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition flex items-center justify-center">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        `;
+                        grid.innerHTML += cardHTML;
+                    });
+
+                    const now = new Date();
+                    updateTime.innerText = `Son Güncelleme: ${now.toLocaleTimeString('tr-TR')}`;
+                } else {
+                    grid.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-500"><p>Haber akışı alınamadı. Lütfen yenileyin.</p></div>`;
+                }
+            } catch (error) {
+                errorMsg.classList.remove('hidden');
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
