@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CyberSecTR - Siber Güvenlik Haberleri & CTF Etkinlikleri</title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    <title>CyberSecTR - Global Cybersecurity News &amp; CTF Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -23,17 +22,11 @@
             min-height: 100vh;
         }
 
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* Terminal scanline effect */
         .scanline {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 9999;
             background: repeating-linear-gradient(0deg,
@@ -43,155 +36,93 @@
                     transparent 3px);
         }
 
-        /* Glow effects */
-        .glow-green {
-            text-shadow: 0 0 10px rgba(0, 255, 68, 0.5), 0 0 20px rgba(0, 255, 68, 0.2);
-        }
-        .glow-cyan {
-            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5), 0 0 20px rgba(0, 200, 255, 0.2);
-        }
-        .glow-red {
-            text-shadow: 0 0 10px rgba(255, 50, 50, 0.5), 0 0 20px rgba(255, 50, 50, 0.2);
-        }
+        .glow-green { text-shadow: 0 0 10px rgba(0, 255, 68, 0.5), 0 0 20px rgba(0, 255, 68, 0.2); }
+        .glow-cyan { text-shadow: 0 0 10px rgba(0, 200, 255, 0.5), 0 0 20px rgba(0, 200, 255, 0.2); }
+        .glow-red { text-shadow: 0 0 10px rgba(255, 50, 50, 0.5), 0 0 20px rgba(255, 50, 50, 0.2); }
 
-        .border-glow {
-            box-shadow: 0 0 15px rgba(0, 255, 68, 0.1), inset 0 0 15px rgba(0, 255, 68, 0.02);
-        }
+        .border-glow { box-shadow: 0 0 15px rgba(0, 255, 68, 0.1), inset 0 0 15px rgba(0, 255, 68, 0.02); }
 
-        .card-hover {
-            transition: all 0.3s ease;
-        }
+        .card-hover { transition: all 0.25s ease; }
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 30px rgba(0, 255, 68, 0.15);
+            border-color: rgba(0,255,68,0.35) !important;
         }
 
-        /* Matrix rain bg (subtle) */
         #matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.04;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.04; pointer-events: none;
         }
 
-        .content {
-            position: relative;
-            z-index: 1;
-        }
+        .content { position: relative; z-index: 1; }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0f;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00ff44;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00cc33;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #00ff44; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00cc33; }
 
-        /* Loading spinner */
         .spinner {
             border: 3px solid rgba(0, 255, 68, 0.1);
             border-top: 3px solid #00ff44;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Pulse dot */
         .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: #00ff44;
-            border-radius: 50%;
+            width: 8px; height: 8px; background: #00ff44; border-radius: 50%;
             animation: pulse 1.5s ease-in-out infinite;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
 
-        /* Category badges */
         .cat-badge {
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            padding: 2px 10px; border-radius: 20px; font-size: 11px;
+            font-weight: 600; letter-spacing: 0.5px; white-space: nowrap;
         }
 
-        /* Country flag placeholder style */
-        .flag-placeholder {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 20px;
-            border-radius: 3px;
-            font-size: 16px;
-        }
+        select, input, button { outline: none; font-family: inherit; }
+        select:focus, input:focus { border-color: #00ff44 !important; box-shadow: 0 0 0 2px rgba(0, 255, 68, 0.2) !important; }
 
-        /* News card image placeholder */
-        .news-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+        .terminal-header { background: #0d0d14; border-bottom: 1px solid rgba(0, 255, 68, 0.15); }
 
-        select, input, button {
-            outline: none;
-        }
-
-        select:focus, input:focus {
-            border-color: #00ff44 !important;
-            box-shadow: 0 0 0 2px rgba(0, 255, 68, 0.2) !important;
-        }
-
-        /* Terminal header */
-        .terminal-header {
-            background: #0d0d14;
-            border-bottom: 1px solid rgba(0, 255, 68, 0.15);
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot-red { background: #ff5f56; }
         .dot-yellow { background: #ffbd2e; }
         .dot-green { background: #27c93f; }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .tab-btn { border-bottom: 2px solid transparent; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; white-space: nowrap; }
+        .tab-btn.active { color: #4ade80 !important; border-bottom-color: #4ade80 !important; }
+
+        button { cursor: pointer; }
+
+        .lang-btn.active { background: rgba(0,255,68,0.15); border-color: #00ff44 !important; color: #4ade80 !important; }
+
+        .toast {
+            position: fixed; bottom: 20px; right: 20px; z-index: 10000;
+            background: #0d0d14; border: 1px solid rgba(0,255,68,0.4);
+            color: #4ade80; padding: 10px 18px; border-radius: 8px;
+            font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transform: translateY(20px); opacity: 0; transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
-    <!-- Scanline overlay -->
     <div class="scanline"></div>
-
-    <!-- Matrix background canvas -->
     <canvas id="matrix-bg"></canvas>
+    <div id="toast" class="toast"></div>
 
-    <!-- Main Content -->
     <div class="content">
 
         <!-- Terminal Header -->
-        <header class="terminal-header px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+        <header class="terminal-header px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-50 backdrop-blur-lg bg-opacity-90 flex-wrap gap-2">
             <div class="flex items-center gap-3">
                 <div class="flex gap-2">
                     <span class="dot dot-red"></span>
@@ -204,8 +135,25 @@
                     <span class="mono text-xs text-green-400 glow-green">./hackernews --global --live</span>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <span class="mono text-xs text-gray-600 hidden sm:block">[STATUS: <span class="text-green-400" id="connection-status">ONLINE</span>]</span>
+            <div class="flex items-center gap-3">
+                <!-- Language Switcher -->
+                <div class="relative">
+                    <button id="lang-toggle-btn" class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-gray-700 text-gray-300 text-xs mono hover:border-green-600 transition">
+                        <i class="fas fa-globe text-green-400"></i>
+                        <span id="current-lang-label">EN</span>
+                        <i class="fas fa-chevron-down text-[9px] text-gray-500"></i>
+                    </button>
+                    <div id="lang-menu" class="hidden absolute right-0 mt-2 w-44 bg-gray-900 border border-gray-700 rounded-lg shadow-xl overflow-hidden z-50">
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="en"><span>🇬🇧</span><span>English</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="tr"><span>🇹🇷</span><span>Türkçe</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="az"><span>🇦🇿</span><span>Azərbaycan</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="de"><span>🇩🇪</span><span>Deutsch</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="fr"><span>🇫🇷</span><span>Français</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="es"><span>🇪🇸</span><span>Español</span></button>
+                        <button class="lang-btn w-full text-left px-3 py-2 text-xs mono text-gray-300 hover:bg-gray-800 flex items-center gap-2" data-lang="ru"><span>🇷🇺</span><span>Русский</span></button>
+                    </div>
+                </div>
+                <span class="mono text-xs text-gray-600 hidden sm:block">[<span data-i18n="status_label">STATUS</span>: <span class="text-green-400" id="connection-status" data-i18n="status_online">ONLINE</span>]</span>
                 <span class="mono text-xs text-gray-600" id="live-clock">00:00:00</span>
             </div>
         </header>
@@ -219,15 +167,15 @@
                             <span class="text-green-400 glow-green">CyberSec</span><span class="text-cyan-400 glow-cyan">TR</span>
                         </h1>
                         <p class="text-gray-500 mt-2 text-sm md:text-base max-w-xl">
-                            <span class="mono text-xs text-green-600">#</span> Gerçek zamanlı siber güvenlik haberleri, CTF etkinlikleri ve dünya çapında güvenlik duyuruları.
-                            <span class="mono text-xs text-gray-600 block mt-1">// 1000+ kaynak taranıyor • API gerektirmez • Tamamen ücretsiz</span>
+                            <span class="mono text-xs text-green-600">#</span> <span data-i18n="hero_subtitle">Real-time cybersecurity news, CTF events, and security advisories from around the world.</span>
+                            <span class="mono text-xs text-gray-600 block mt-1" data-i18n="hero_tagline">// Tracking 40+ global sources • No API key needed • Completely free</span>
                         </p>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="pulse-dot"></div>
-                        <span class="mono text-xs text-gray-500">CANLI YAYIN</span>
+                        <span class="mono text-xs text-gray-500" data-i18n="live_feed">LIVE FEED</span>
                         <span class="mono text-xs text-green-500" id="news-count">0</span>
-                        <span class="mono text-xs text-gray-600">haber</span>
+                        <span class="mono text-xs text-gray-600" data-i18n="items_label">items</span>
                     </div>
                 </div>
             </div>
@@ -237,89 +185,90 @@
         <section class="px-4 md:px-8 py-6 border-b border-gray-800 bg-gray-900 bg-opacity-30">
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Ülke Seçimi -->
+                    <!-- Country -->
                     <div>
-                        <label class="mono text-xs text-gray-500 mb-1 block">ÜLKE / BÖLGE</label>
+                        <label class="mono text-xs text-gray-500 mb-1 block" data-i18n="filter_country">COUNTRY / REGION</label>
                         <select id="country-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:ring-2 focus:ring-green-500 transition">
-                            <option value="all">🌍 Tüm Dünya</option>
+                            <option value="all" data-i18n="country_all">🌍 All Countries</option>
                             <option value="TR">🇹🇷 Türkiye</option>
-                            <option value="US">🇺🇸 Amerika Birleşik Devletleri</option>
-                            <option value="GB">🇬🇧 Birleşik Krallık</option>
-                            <option value="DE">🇩🇪 Almanya</option>
-                            <option value="FR">🇫🇷 Fransa</option>
-                            <option value="RU">🇷🇺 Rusya</option>
-                            <option value="CN">🇨🇳 Çin</option>
-                            <option value="KR">🇰🇷 Güney Kore</option>
-                            <option value="JP">🇯🇵 Japonya</option>
-                            <option value="IN">🇮🇳 Hindistan</option>
-                            <option value="IL">🇮🇱 İsrail</option>
-                            <option value="NL">🇳🇱 Hollanda</option>
-                            <option value="SE">🇸🇪 İsveç</option>
-                            <option value="CH">🇨🇭 İsviçre</option>
-                            <option value="SG">🇸🇬 Singapur</option>
-                            <option value="AU">🇦🇺 Avustralya</option>
-                            <option value="BR">🇧🇷 Brezilya</option>
-                            <option value="CA">🇨🇦 Kanada</option>
-                            <option value="AZ">🇦🇿 Azerbaycan</option>
-                            <option value="IR">🇮🇷 İran</option>
+                            <option value="US">🇺🇸 United States</option>
+                            <option value="GB">🇬🇧 United Kingdom</option>
+                            <option value="DE">🇩🇪 Germany</option>
+                            <option value="FR">🇫🇷 France</option>
+                            <option value="RU">🇷🇺 Russia</option>
+                            <option value="CN">🇨🇳 China</option>
+                            <option value="KR">🇰🇷 South Korea</option>
+                            <option value="JP">🇯🇵 Japan</option>
+                            <option value="IN">🇮🇳 India</option>
+                            <option value="IL">🇮🇱 Israel</option>
+                            <option value="NL">🇳🇱 Netherlands</option>
+                            <option value="SE">🇸🇪 Sweden</option>
+                            <option value="CH">🇨🇭 Switzerland</option>
+                            <option value="SG">🇸🇬 Singapore</option>
+                            <option value="AU">🇦🇺 Australia</option>
+                            <option value="BR">🇧🇷 Brazil</option>
+                            <option value="CA">🇨🇦 Canada</option>
+                            <option value="AZ">🇦🇿 Azerbaijan</option>
+                            <option value="IR">🇮🇷 Iran</option>
                             <option value="PK">🇵🇰 Pakistan</option>
-                            <option value="UA">🇺🇦 Ukrayna</option>
-                            <option value="PL">🇵🇱 Polonya</option>
-                            <option value="IT">🇮🇹 İtalya</option>
-                            <option value="ES">🇪🇸 İspanya</option>
-                            <option value="AE">🇦🇪 Birleşik Arap Emirlikleri</option>
-                            <option value="ZA">🇿🇦 Güney Afrika</option>
-                            <option value="EG">🇪🇬 Mısır</option>
-                            <option value="ID">🇮🇩 Endonezya</option>
-                            <option value="MY">🇲🇾 Malezya</option>
-                            <option value="TW">🇹🇼 Tayvan</option>
+                            <option value="UA">🇺🇦 Ukraine</option>
+                            <option value="PL">🇵🇱 Poland</option>
+                            <option value="IT">🇮🇹 Italy</option>
+                            <option value="ES">🇪🇸 Spain</option>
+                            <option value="AE">🇦🇪 United Arab Emirates</option>
+                            <option value="ZA">🇿🇦 South Africa</option>
+                            <option value="EG">🇪🇬 Egypt</option>
+                            <option value="ID">🇮🇩 Indonesia</option>
+                            <option value="MY">🇲🇾 Malaysia</option>
+                            <option value="TW">🇹🇼 Taiwan</option>
                             <option value="HK">🇭🇰 Hong Kong</option>
-                            <option value="NO">🇳🇴 Norveç</option>
-                            <option value="FI">🇫🇮 Finlandiya</option>
-                            <option value="DK">🇩🇰 Danimarka</option>
-                            <option value="CZ">🇨🇿 Çek Cumhuriyeti</option>
-                            <option value="RO">🇷🇴 Romanya</option>
-                            <option value="BG">🇧🇬 Bulgaristan</option>
+                            <option value="NO">🇳🇴 Norway</option>
+                            <option value="FI">🇫🇮 Finland</option>
+                            <option value="DK">🇩🇰 Denmark</option>
+                            <option value="CZ">🇨🇿 Czech Republic</option>
+                            <option value="RO">🇷🇴 Romania</option>
+                            <option value="BG">🇧🇬 Bulgaria</option>
                         </select>
                     </div>
 
-                    <!-- Zaman Aralığı -->
+                    <!-- Time -->
                     <div>
-                        <label class="mono text-xs text-gray-500 mb-1 block">ZAMAN ARALIĞI</label>
+                        <label class="mono text-xs text-gray-500 mb-1 block" data-i18n="filter_time">TIME RANGE</label>
                         <select id="time-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:ring-2 focus:ring-green-500 transition">
-                            <option value="day">Son 24 Saat</option>
-                            <option value="week" selected>Son 1 Hafta</option>
-                            <option value="month">Son 1 Ay</option>
-                            <option value="3months">Son 3 Ay</option>
-                            <option value="year">Son 1 Yıl</option>
+                            <option value="day" data-i18n="time_day">Last 24 Hours</option>
+                            <option value="week" selected data-i18n="time_week">Last 7 Days</option>
+                            <option value="month" data-i18n="time_month">Last 30 Days</option>
+                            <option value="3months" data-i18n="time_3months">Last 3 Months</option>
+                            <option value="year" data-i18n="time_year">Last Year</option>
+                            <option value="all" data-i18n="time_all">All Time</option>
                         </select>
                     </div>
 
-                    <!-- Kategori -->
+                    <!-- Category -->
                     <div>
-                        <label class="mono text-xs text-gray-500 mb-1 block">KATEGORİ</label>
+                        <label class="mono text-xs text-gray-500 mb-1 block" data-i18n="filter_category">CATEGORY</label>
                         <select id="category-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:ring-2 focus:ring-green-500 transition">
-                            <option value="all">🔥 Tümü</option>
-                            <option value="vulnerability">🛡️ Güvenlik Açığı (CVE)</option>
-                            <option value="malware">🦠 Kötü Amaçlı Yazılım</option>
-                            <option value="ctf">🏴 CTF Etkinlikleri</option>
-                            <option value="conference">🎤 Konferanslar</option>
-                            <option value="ransomware">💰 Fidye Yazılımı</option>
-                            <option value="hacktivism">✊ Hacktivizm</option>
-                            <option value="breach">🔓 Veri İhlali</option>
-                            <option value="zero-day">💀 Zero-Day</option>
-                            <option value="ai-security">🤖 AI Güvenliği</option>
-                            <option value="iot">📡 IoT Güvenliği</option>
-                            <option value="pentest-tools">⚔️ Pentest Araçları</option>
-                            <option value="bug-bounty">🏆 Bug Bounty</option>
+                            <option value="all" data-i18n="cat_all">🔥 All Categories</option>
+                            <option value="vulnerability" data-i18n="cat_vulnerability">🛡️ Vulnerability (CVE)</option>
+                            <option value="malware" data-i18n="cat_malware">🦠 Malware</option>
+                            <option value="ctf" data-i18n="cat_ctf">🏴 CTF Events</option>
+                            <option value="conference" data-i18n="cat_conference">🎤 Conferences</option>
+                            <option value="ransomware" data-i18n="cat_ransomware">💰 Ransomware</option>
+                            <option value="hacktivism" data-i18n="cat_hacktivism">✊ Hacktivism</option>
+                            <option value="breach" data-i18n="cat_breach">🔓 Data Breach</option>
+                            <option value="zero-day" data-i18n="cat_zeroday">💀 Zero-Day</option>
+                            <option value="ai-security" data-i18n="cat_aisecurity">🤖 AI Security</option>
+                            <option value="iot" data-i18n="cat_iot">📡 IoT Security</option>
+                            <option value="pentest-tools" data-i18n="cat_pentest">⚔️ Pentest Tools</option>
+                            <option value="bug-bounty" data-i18n="cat_bugbounty">🏆 Bug Bounty</option>
                         </select>
                     </div>
 
-                    <!-- Arama -->
+                    <!-- Search -->
                     <div>
-                        <label class="mono text-xs text-gray-500 mb-1 block">ARAMA</label>
+                        <label class="mono text-xs text-gray-500 mb-1 block" data-i18n="filter_search">SEARCH</label>
                         <div class="relative">
-                            <input type="text" id="search-input" placeholder="Anahtar kelime ara..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 pl-9 text-sm text-gray-200 focus:ring-2 focus:ring-green-500 transition">
+                            <input type="text" id="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search keywords..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 pl-9 text-sm text-gray-200 focus:ring-2 focus:ring-green-500 transition">
                             <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs"></i>
                         </div>
                     </div>
@@ -327,13 +276,16 @@
 
                 <!-- Extra Filters Row -->
                 <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button id="ctf-only-btn" class="px-4 py-1.5 rounded-full border border-cyan-700 text-cyan-400 text-xs mono hover:bg-cyan-900 hover:bg-opacity-20 transition">
-                        <i class="fas fa-flag"></i> Sadece CTF'ler
+                    <button id="ctf-only-btn" type="button" class="px-4 py-1.5 rounded-full border border-cyan-700 text-cyan-400 text-xs mono hover:bg-cyan-900 hover:bg-opacity-20 transition">
+                        <i class="fas fa-flag"></i> <span data-i18n="ctf_only">CTF Events Only</span>
                     </button>
-                    <button id="refresh-btn" class="px-4 py-1.5 rounded-full border border-green-700 text-green-400 text-xs mono hover:bg-green-900 hover:bg-opacity-20 transition">
-                        <i class="fas fa-sync-alt"></i> Yenile
+                    <button id="refresh-btn" type="button" class="px-4 py-1.5 rounded-full border border-green-700 text-green-400 text-xs mono hover:bg-green-900 hover:bg-opacity-20 transition">
+                        <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Refresh</span>
                     </button>
-                    <span class="mono text-xs text-gray-600 ml-auto" id="result-count">0 sonuç</span>
+                    <button id="clear-filters-btn" type="button" class="px-4 py-1.5 rounded-full border border-gray-700 text-gray-400 text-xs mono hover:border-red-700 hover:text-red-400 transition">
+                        <i class="fas fa-times"></i> <span data-i18n="clear_filters">Clear Filters</span>
+                    </button>
+                    <span class="mono text-xs text-gray-600 ml-auto" id="result-count">0 <span data-i18n="results_label">results</span></span>
                 </div>
             </div>
         </section>
@@ -342,8 +294,8 @@
         <div id="loading-section" class="hidden flex items-center justify-center py-20">
             <div class="text-center">
                 <div class="spinner mx-auto mb-4"></div>
-                <p class="mono text-sm text-gray-500">Binlerce kaynak taranıyor...</p>
-                <p class="mono text-xs text-gray-700 mt-2">CTF etkinlikleri, güvenlik haberleri ve daha fazlası</p>
+                <p class="mono text-sm text-gray-500" data-i18n="loading_main">Scanning thousands of sources...</p>
+                <p class="mono text-xs text-gray-700 mt-2" data-i18n="loading_sub">CTF events, security news and more</p>
             </div>
         </div>
 
@@ -355,45 +307,41 @@
                 <div id="ctf-spotlight-section" class="mb-10 hidden">
                     <div class="flex items-center gap-2 mb-4">
                         <i class="fas fa-trophy text-yellow-400 text-lg"></i>
-                        <h2 class="text-lg font-bold text-yellow-400 mono glow-red">YAKLAŞAN CTF ETKİNLİKLERİ</h2>
+                        <h2 class="text-lg font-bold text-yellow-400 mono glow-red" data-i18n="ctf_spotlight_title">UPCOMING CTF EVENTS</h2>
                         <span class="mono text-xs text-gray-600" id="ctf-count-badge"></span>
                     </div>
-                    <div id="ctf-spotlight-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- CTF cards injected here -->
-                    </div>
+                    <div id="ctf-spotlight-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
 
                 <!-- Section Tabs -->
                 <div class="flex items-center border-b border-gray-800 mb-6 overflow-x-auto">
-                    <button class="tab-btn active px-4 py-3 text-sm font-medium text-green-400 border-b-2 border-green-400 mono" data-tab="all">
-                        <i class="fas fa-newspaper"></i> Tüm Haberler
+                    <button class="tab-btn active px-4 py-3 text-sm font-medium text-green-400 mono" data-tab="all">
+                        <i class="fas fa-newspaper"></i> <span data-i18n="tab_all">All News</span>
                     </button>
                     <button class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 mono transition" data-tab="ctf">
-                        <i class="fas fa-flag"></i> CTF
+                        <i class="fas fa-flag"></i> <span data-i18n="tab_ctf">CTF</span>
                     </button>
                     <button class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 mono transition" data-tab="vulnerability">
-                        <i class="fas fa-bug"></i> Güvenlik Açıkları
+                        <i class="fas fa-bug"></i> <span data-i18n="tab_vulnerability">Vulnerabilities</span>
                     </button>
                     <button class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 mono transition" data-tab="conference">
-                        <i class="fas fa-users"></i> Konferanslar
+                        <i class="fas fa-users"></i> <span data-i18n="tab_conference">Conferences</span>
                     </button>
                     <button class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 mono transition" data-tab="breach">
-                        <i class="fas fa-exclamation-triangle"></i> Veri İhlalleri
+                        <i class="fas fa-exclamation-triangle"></i> <span data-i18n="tab_breach">Data Breaches</span>
                     </button>
                     <button class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-300 mono transition" data-tab="malware">
-                        <i class="fas fa-skull"></i> Malware
+                        <i class="fas fa-skull"></i> <span data-i18n="tab_malware">Malware</span>
                     </button>
                 </div>
 
                 <!-- News Grid -->
-                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <!-- Cards injected by JavaScript -->
-                </div>
+                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
                 <!-- Load More -->
                 <div class="text-center mt-8 hidden" id="load-more-section">
-                    <button id="load-more-btn" class="px-8 py-3 rounded-lg border border-gray-700 text-gray-400 text-sm mono hover:border-green-700 hover:text-green-400 transition">
-                        <i class="fas fa-chevron-down mr-2"></i> DAHA FAZLA YÜKLE
+                    <button id="load-more-btn" type="button" class="px-8 py-3 rounded-lg border border-gray-700 text-gray-400 text-sm mono hover:border-green-700 hover:text-green-400 transition">
+                        <i class="fas fa-chevron-down mr-2"></i> <span data-i18n="load_more">LOAD MORE</span>
                     </button>
                 </div>
             </div>
@@ -404,1171 +352,20 @@
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-terminal text-green-500 text-sm"></i>
-                    <span class="mono text-xs text-gray-600">CyberSecTR v3.0 // Siber Güvenlik Haber Motoru</span>
+                    <span class="mono text-xs text-gray-600" data-i18n="footer_title">CyberSecTR v3.1 // Cybersecurity News Engine</span>
                 </div>
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 flex-wrap">
                     <span class="mono text-xs text-gray-700">CTFCount: <span id="footer-ctf-count" class="text-green-400">0</span></span>
                     <span class="mono text-xs text-gray-700">NewsIndex: <span id="footer-news-count" class="text-cyan-400">0</span></span>
                     <span class="mono text-xs text-gray-700">|</span>
-                    <span class="mono text-xs text-gray-700">Siyah Şapka Yok • Sadece Bilgi</span>
+                    <span class="mono text-xs text-gray-700" data-i18n="footer_disclaimer">No black hat. Information only.</span>
                 </div>
             </div>
         </footer>
     </div>
 
-    <script>
-        // ============================================================
-        // MATRIX RAIN BACKGROUND (Subtle)
-        // ============================================================
-        (function() {
-            const canvas = document.getElementById('matrix-bg');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789<>/{}[]|&^%$#@!';
-            const fontSize = 10;
-            const columns = canvas.width / fontSize;
-            const drops = Array(Math.floor(columns)).fill(1);
-
-            function drawMatrix() {
-                ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#00ff44';
-                ctx.font = fontSize + 'px monospace';
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = chars[Math.floor(Math.random() * chars.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-            }
-
-            setInterval(drawMatrix, 60);
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        })();
-
-        // ============================================================
-        // LIVE CLOCK
-        // ============================================================
-        function updateClock() {
-            const now = new Date();
-            const clock = document.getElementById('live-clock');
-            clock.textContent = now.toLocaleTimeString('tr-TR', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // ============================================================
-        // STATE
-        // ============================================================
-        const state = {
-            allNews: [],
-            allCtfEvents: [],
-            filteredNews: [],
-            displayedCount: 0,
-            pageSize: 12,
-            country: 'all',
-            timeRange: 'week',
-            category: 'all',
-            search: '',
-            ctfOnly: false,
-            activeTab: 'all',
-            isLoading: false,
-        };
-
-        // ============================================================
-        // FETCH DATA (RSS feeds, CTF sites, etc.)
-        // ============================================================
-        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-        // Alternative: use 'https://corsproxy.io/?' if needed
-
-        async function fetchWithProxy(url) {
-            try {
-                const resp = await fetch(CORS_PROXY + encodeURIComponent(url), {
-                    signal: AbortSignal.timeout(12000)
-                });
-                if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                return await resp.text();
-            } catch (e) {
-                // Fallback: try without proxy for some feeds
-                try {
-                    const resp2 = await fetch(url, { signal: AbortSignal.timeout(8000) });
-                    if (!resp2.ok) throw new Error('HTTP ' + resp2.status);
-                    return await resp2.text();
-                } catch (e2) {
-                    console.warn('Fetch failed for', url, e2);
-                    return null;
-                }
-            }
-        }
-
-        function parseRSS(xmlText, sourceName) {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(xmlText, 'text/xml');
-            const items = xml.querySelectorAll('item');
-            const results = [];
-            items.forEach(item => {
-                const title = item.querySelector('title')?.textContent || 'Başlık yok';
-                const link = item.querySelector('link')?.textContent || '#';
-                const desc = item.querySelector('description')?.textContent || '';
-                const pubDate = item.querySelector('pubDate')?.textContent || '';
-                const creator = item.querySelector('dc\\:creator')?.textContent || sourceName;
-                const categories = [];
-                item.querySelectorAll('category').forEach(c => categories.push(c.textContent));
-
-                results.push({
-                    title: title.trim(),
-                    link: link.trim(),
-                    description: desc.replace(/<[^>]*>/g, '').trim().substring(0, 300),
-                    pubDate: pubDate.trim(),
-                    source: sourceName,
-                    categories: categories,
-                    type: 'news'
-                });
-            });
-            return results;
-        }
-
-        function parseHTMLArticles(html, baseUrl, sourceName) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const articles = doc.querySelectorAll('article, .post, .entry, .news-item, .card, li');
-            const results = [];
-            articles.forEach(art => {
-                const titleEl = art.querySelector('h1, h2, h3, h4, .title, .entry-title, a[href]');
-                if (!titleEl) return;
-                const title = titleEl.textContent.trim();
-                if (!title || title.length < 5) return;
-                const link = titleEl.closest('a')?.href || titleEl.querySelector('a')?.href || baseUrl;
-                const desc = art.querySelector('p, .description, .excerpt, .summary')?.textContent?.trim() || '';
-                const img = art.querySelector('img')?.src || '';
-
-                results.push({
-                    title: title,
-                    link: link,
-                    description: desc.substring(0, 300),
-                    pubDate: new Date().toUTCString(),
-                    source: sourceName,
-                    categories: [],
-                    type: 'news',
-                    image: img
-                });
-            });
-            return results;
-        }
-
-        // CTF Events Database (hardcoded + dynamic augmented)
-        // These are known recurring/major CTF events. The system also fetches live CTF listings.
-        const KNOWN_CTF_EVENTS = [{
-            title: "DEF CON CTF 2026 Quals",
-            link: "https://defcon.org",
-            date: "2026-07-15",
-            endDate: "2026-07-17",
-            country: "US",
-            platform: "Jeopardy + Attack-Defense",
-            description: "Dünyanın en büyük CTF'si. DEF CON 34 kapsamında düzenleniyor.",
-            source: "DEF CON"
-        }, {
-            title: "CTFZone 2026",
-            link: "https://ctfzone.org",
-            date: "2026-08-10",
-            endDate: "2026-08-12",
-            country: "RU",
-            platform: "Jeopardy",
-            description: "Uluslararası siber güvenlik yarışması.",
-            source: "CTFZone"
-        }, {
-            title: "HackTheBox CTF 2026",
-            link: "https://ctf.hackthebox.com",
-            date: "2026-09-01",
-            endDate: "2026-09-03",
-            country: "all",
-            platform: "Jeopardy",
-            description: "HTB tarafından düzenlenen global CTF.",
-            source: "HackTheBox"
-        }, {
-            title: "Pwn2Own 2026",
-            link: "https://www.zerodayinitiative.com",
-            date: "2026-10-20",
-            endDate: "2026-10-22",
-            country: "US",
-            platform: "Exploit Competition",
-            description: "Gerçek dünya exploit yarışması. Böcek öldürenler ödül kazanır.",
-            source: "ZDI"
-        }, {
-            title: "SECCON CTF 2026",
-            link: "https://ctf.seccon.jp",
-            date: "2026-12-15",
-            endDate: "2026-12-17",
-            country: "JP",
-            platform: "Jeopardy",
-            description: "Japonya'nın en büyük CTF etkinliği.",
-            source: "SECCON"
-        }, {
-            title: "BSidesLV CTF 2026",
-            link: "https://bsideslv.org",
-            date: "2026-08-05",
-            endDate: "2026-08-07",
-            country: "US",
-            platform: "Jeopardy",
-            description: "BSides Las Vegas CTF yarışması.",
-            source: "BSidesLV"
-        }, {
-            title: "0x41414141 CTF 2026",
-            link: "https://ctf.0x41414141.com",
-            date: "2026-11-01",
-            endDate: "2026-11-03",
-            country: "IN",
-            platform: "Jeopardy",
-            description: "Hint siber güvenlik topluluğu CTF'si.",
-            source: "0x41414141"
-        }, {
-            title: "KnightCTF 2026",
-            link: "https://knightctf.com",
-            date: "2026-08-20",
-            endDate: "2026-08-22",
-            country: "BD",
-            platform: "Jeopardy",
-            description: "Bangladeş merkezli uluslararası CTF.",
-            source: "KnightCTF"
-        }, {
-            title: "WaniCTF 2026",
-            link: "https://wanictf.org",
-            date: "2026-09-10",
-            endDate: "2026-09-12",
-            country: "JP",
-            platform: "Jeopardy",
-            description: "Japonya Wani Hackase CTF etkinliği.",
-            source: "WaniCTF"
-        }, {
-            title: "MOCSCTF 2026",
-            link: "https://mocsctf.com",
-            date: "2026-10-05",
-            endDate: "2026-10-07",
-            country: "TW",
-            platform: "Jeopardy + A/D",
-            description: "Tayvan merkezli CTF.",
-            source: "MOCSCTF"
-        }, {
-            title: "CodeBlue CTF 2026",
-            link: "https://codeblue.jp",
-            date: "2026-11-15",
-            endDate: "2026-11-17",
-            country: "JP",
-            platform: "Jeopardy",
-            description: "CodeBlue konferansı kapsamında CTF.",
-            source: "CodeBlue"
-        }, {
-            title: "TFC CTF 2026",
-            link: "https://tfcctf.com",
-            date: "2026-07-25",
-            endDate: "2026-07-27",
-            country: "RO",
-            platform: "Jeopardy",
-            description: "Romanya CTF yarışması.",
-            source: "TFC CTF"
-        }, {
-            title: "Balsn CTF 2026",
-            link: "https://ctf.balsn.tw",
-            date: "2026-12-01",
-            endDate: "2026-12-03",
-            country: "TW",
-            platform: "Jeopardy",
-            description: "Tayvan Balsn CTF.",
-            source: "Balsn"
-        }, {
-            title: "Srdnlen CTF 2026",
-            link: "https://ctf.srdnlen.it",
-            date: "2026-09-20",
-            endDate: "2026-09-22",
-            country: "IT",
-            platform: "Jeopardy",
-            description: "İtalya CTF etkinliği.",
-            source: "Srdnlen"
-        }, {
-            title: "Hacktoday CTF 2026",
-            link: "https://hacktoday.io",
-            date: "2026-08-15",
-            endDate: "2026-08-17",
-            country: "ID",
-            platform: "Jeopardy",
-            description: "Endonezya CTF yarışması.",
-            source: "Hacktoday"
-        }, {
-            title: "CyberSecurityChallenge TR 2026",
-            link: "https://cscturkey.org",
-            date: "2026-10-10",
-            endDate: "2026-10-12",
-            country: "TR",
-            platform: "Jeopardy + A/D",
-            description: "Türkiye Siber Güvenlik Yarışması. Üniversite ve lise kategorileri.",
-            source: "CSC TR"
-        }, {
-            title: "IstanbulCTF 2026",
-            link: "https://istanbulctf.org",
-            date: "2026-11-05",
-            endDate: "2026-11-07",
-            country: "TR",
-            platform: "Jeopardy",
-            description: "İstanbul merkezli CTF etkinliği.",
-            source: "IstanbulCTF"
-        }, {
-            title: "CyberWarForce CTF 2026",
-            link: "https://cyberwarforce.org",
-            date: "2026-09-25",
-            endDate: "2026-09-27",
-            country: "AZ",
-            platform: "Jeopardy + A/D",
-            description: "Azerbaycan merkezli uluslararası CTF yarışması.",
-            source: "CyberWarForce"
-        }, {
-            title: "NullCon CTF 2026",
-            link: "https://nullcon.net",
-            date: "2026-08-28",
-            endDate: "2026-08-30",
-            country: "IN",
-            platform: "Jeopardy",
-            description: "NullCon Hackathon CTF.",
-            source: "NullCon"
-        }, {
-            title: "Zh3r0 CTF 2026",
-            link: "https://ctf.zh3r0.com",
-            date: "2026-12-10",
-            endDate: "2026-12-12",
-            country: "MA",
-            platform: "Jeopardy",
-            description: "Fas merkezli CTF.",
-            source: "Zh3r0"
-        }, {
-            title: "CTF.SG 2026",
-            link: "https://ctf.sg",
-            date: "2026-10-25",
-            endDate: "2026-10-27",
-            country: "SG",
-            platform: "Jeopardy",
-            description: "Singapur CTF yarışması.",
-            source: "CTF.SG"
-        }, {
-            title: "PASC CTF 2026",
-            link: "https://pascctf.org",
-            date: "2026-11-20",
-            endDate: "2026-11-22",
-            country: "PK",
-            platform: "Jeopardy",
-            description: "Pakistan CTF etkinliği.",
-            source: "PASC CTF"
-        }, {
-            title: "TMCTF 2026",
-            link: "https://tmctf.org",
-            date: "2026-12-05",
-            endDate: "2026-12-07",
-            country: "MY",
-            platform: "Jeopardy",
-            description: "Malezya CTF yarışması.",
-            source: "TMCTF"
-        }, {
-            title: "Korea Cybersecurity Challenge 2026",
-            link: "https://kcybersecurity.kr",
-            date: "2026-09-15",
-            endDate: "2026-09-17",
-            country: "KR",
-            platform: "Jeopardy + A/D",
-            description: "Güney Kore Ulusal Siber Güvenlik Yarışması.",
-            source: "KCSC"
-        }, {
-            title: "CodeGate CTF 2026",
-            link: "https://codegate.org",
-            date: "2026-08-22",
-            endDate: "2026-08-24",
-            country: "KR",
-            platform: "Jeopardy",
-            description: "Güney Kore CodeGate CTF.",
-            source: "CodeGate"
-        }, {
-            title: "Samsung CTF 2026",
-            link: "https://samsungctf.com",
-            date: "2026-10-30",
-            endDate: "2026-11-01",
-            country: "KR",
-            platform: "Jeopardy",
-            description: "Samsung tarafından düzenlenen CTF.",
-            source: "Samsung"
-        }, {
-            title: "KaisHack CTF 2026",
-            link: "https://kaishack.xyz",
-            date: "2026-11-25",
-            endDate: "2026-11-27",
-            country: "FI",
-            platform: "Jeopardy",
-            description: "Finlandiya CTF etkinliği.",
-            source: "KaisHack"
-        }, {
-            title: "Hack.lu CTF 2026",
-            link: "https://hack.lu",
-            date: "2026-10-15",
-            endDate: "2026-10-17",
-            country: "LU",
-            platform: "Jeopardy",
-            description: "Lüksemburg hack.lu konferansı CTF'si.",
-            source: "hack.lu"
-        }, {
-            title: "FAUST CTF 2026",
-            link: "https://faustctf.net",
-            date: "2026-12-20",
-            endDate: "2026-12-22",
-            country: "DE",
-            platform: "Attack-Defense",
-            description: "Alman CTF takımı FAUST'un düzenlediği A/D CTF.",
-            source: "FAUST"
-        }, {
-            title: "CactusCon CTF 2026",
-            link: "https://cactuscon.com",
-            date: "2026-09-05",
-            endDate: "2026-09-07",
-            country: "US",
-            platform: "Jeopardy",
-            description: "Arizona merkezli CTF.",
-            source: "CactusCon"
-        }, {
-            title: "BSides Istanbul CTF 2026",
-            link: "https://bsidesist.org",
-            date: "2026-11-12",
-            endDate: "2026-11-14",
-            country: "TR",
-            platform: "Jeopardy",
-            description: "BSides İstanbul CTF etkinliği.",
-            source: "BSides Istanbul"
-        }, {
-            title: "HackASat CTF 2026",
-            link: "https://hackasat.com",
-            date: "2026-08-08",
-            endDate: "2026-08-10",
-            country: "US",
-            platform: "Jeopardy",
-            description: "Uzay güvenliği odaklı CTF. ABD Hava Kuvvetleri destekli.",
-            source: "HackASat"
-        }, {
-            title: "DragonCTF 2026",
-            link: "https://dragonctf.com",
-            date: "2026-09-28",
-            endDate: "2026-09-30",
-            country: "DE",
-            platform: "Jeopardy",
-            description: "Alman DragonSector ekibinin CTF'si.",
-            source: "DragonSector"
-        }, {
-            title: "Bytectf 2026",
-            link: "https://bytectf.org",
-            date: "2026-10-08",
-            endDate: "2026-10-10",
-            country: "CN",
-            platform: "Jeopardy",
-            description: "Çin ByteCTF yarışması.",
-            source: "ByteCTF"
-        }, {
-            title: "Ritsec CTF 2026",
-            link: "https://ritsec.ctf.com",
-            date: "2026-11-18",
-            endDate: "2026-11-20",
-            country: "US",
-            platform: "Jeopardy",
-            description: "RIT merkezli CTF.",
-            source: "RITSEC"
-        }, {
-            title: "Bushwhackers CTF 2026",
-            link: "https://bushwhackers.ru",
-            date: "2026-12-15",
-            endDate: "2026-12-17",
-            country: "RU",
-            platform: "Jeopardy",
-            description: "Rus Bushwhackers CTF.",
-            source: "Bushwhackers"
-        }, {
-            title: "IceCTF 2026",
-            link: "https://icec.tf",
-            date: "2026-08-14",
-            endDate: "2026-08-16",
-            country: "all",
-            platform: "Jeopardy",
-            description: "Uluslararası çevrimiçi CTF.",
-            source: "IceCTF"
-        }, {
-            title: "SunshineCTF 2026",
-            link: "https://sunshinectf.org",
-            date: "2026-09-12",
-            endDate: "2026-09-14",
-            country: "US",
-            platform: "Jeopardy",
-            description: "Florida merkezli CTF.",
-            source: "SunshineCTF"
-        }, {
-            title: "BambooFox CTF 2026",
-            link: "https://bamboofox.cs.nctu.edu.tw",
-            date: "2026-10-22",
-            endDate: "2026-10-24",
-            country: "TW",
-            platform: "Jeopardy",
-            description: "Tayvan BambooFox CTF.",
-            source: "BambooFox"
-        }, {
-            title: "Basis CTF 2026",
-            link: "https://basisctf.com",
-            date: "2026-11-28",
-            endDate: "2026-11-30",
-            country: "BR",
-            platform: "Jeopardy",
-            description: "Brezilya CTF yarışması.",
-            source: "Basis CTF"
-        }, {
-            title: "Tamu CTF 2026",
-            link: "https://tamuctf.com",
-            date: "2026-12-08",
-            endDate: "2026-12-10",
-            country: "US",
-            platform: "Jeopardy",
-            description: "Texas A&M CTF yarışması.",
-            source: "TAMUctf"
-        }, {
-            title: "CSAW CTF 2026",
-            link: "https://csaw.engineering.nyu.edu/ctf",
-            date: "2026-09-08",
-            endDate: "2026-09-10",
-            country: "US",
-            platform: "Jeopardy + A/D",
-            description: "NYU CSAW CTF. Dünyanın en büyük öğrenci CTF'lerinden.",
-            source: "CSAW"
-        }, {
-            title: "PlaidCTF 2026",
-            link: "https://plaidctf.com",
-            date: "2026-10-12",
-            endDate: "2026-10-14",
-            country: "US",
-            platform: "Jeopardy",
-            description: "CMU PPP ekibinin düzenlediği CTF.",
-            source: "PlaidCTF"
-        }, {
-            title: "Google CTF 2026",
-            link: "https://capturetheflag.withgoogle.com",
-            date: "2026-07-10",
-            endDate: "2026-07-12",
-            country: "all",
-            platform: "Jeopardy",
-            description: "Google'ın resmi CTF yarışması.",
-            source: "Google CTF"
-        }, {
-            title: "Facebook CTF 2026",
-            link: "https://ctf.facebook.com",
-            date: "2026-08-01",
-            endDate: "2026-08-03",
-            country: "all",
-            platform: "Jeopardy",
-            description: "Meta/Facebook CTF yarışması.",
-            source: "Facebook CTF"
-        }, {
-            title: "Hacktoday 2026 - Azerbaijan CyberWeek",
-            link: "https://cyberweek.az",
-            date: "2026-09-20",
-            endDate: "2026-09-22",
-            country: "AZ",
-            platform: "Jeopardy + A/D",
-            description: "Azerbaycan Siber Haftası kapsamında CTF.",
-            source: "CyberWeek AZ"
-        }, {
-            title: "Baykar CTF 2026",
-            link: "https://baykarctf.com",
-            date: "2026-10-05",
-            endDate: "2026-10-07",
-            country: "TR",
-            platform: "Jeopardy",
-            description: "Baykar Savunma tarafından düzenlenen CTF.",
-            source: "Baykar"
-        }, {
-            title: "STM CTF 2026",
-            link: "https://stmctf.com",
-            date: "2026-11-15",
-            endDate: "2026-11-17",
-            country: "TR",
-            platform: "Jeopardy",
-            description: "STM Savunma Teknolojileri CTF'si.",
-            source: "STM"
-        }, {
-            title: "ASELSAN CTF 2026",
-            link: "https://aselsanctf.com",
-            date: "2026-12-01",
-            endDate: "2026-12-03",
-            country: "TR",
-            platform: "Jeopardy + A/D",
-            description: "ASELSAN Savunma CTF yarışması.",
-            source: "ASELSAN"
-        }];
-
-        // ============================================================
-        // FETCH FROM MULTIPLE SOURCES
-        // ============================================================
-        async function fetchAllData() {
-            state.isLoading = true;
-            document.getElementById('loading-section').classList.remove('hidden');
-            document.getElementById('news-grid').innerHTML = '';
-
-            const allFetched = [];
-
-            // RSS KAYNAKLARI - Siber güvenlik haber siteleri
-            const rssFeeds = [
-                { url: 'https://feeds.feedburner.com/TheHackersNews', name: 'The Hacker News' },
-                { url: 'https://www.bleepingcomputer.com/feed/', name: 'BleepingComputer' },
-                { url: 'https://feeds.feedburner.com/securityweek', name: 'SecurityWeek' },
-                { url: 'https://threatpost.com/feed/', name: 'ThreatPost' },
-                { url: 'https://www.darkreading.com/rss.xml', name: 'DarkReading' },
-                { url: 'https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss.xml', name: 'NVD CVE' },
-                { url: 'https://corsproxy.io/?' + encodeURIComponent('https://packetstormsecurity.com/files/tags/exploit/rss/'), name: 'PacketStorm' },
-                { url: 'https://corsproxy.io/?' + encodeURIComponent('https://www.exploit-db.com/rss.xml'), name: 'ExploitDB' },
-                { url: 'https://corsproxy.io/?' + encodeURIComponent('https://www.kitploit.com/feeds/posts/default'), name: 'KitPloit' },
-            ];
-
-            const rssPromises = rssFeeds.map(async (feed) => {
-                try {
-                    const data = await fetchWithProxy(feed.url);
-                    if (data) return parseRSS(data, feed.name);
-                    return [];
-                } catch (e) { return []; }
-            });
-
-            // HTML scraping kaynakları
-            const htmlSources = [{
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://cyware.com/cyber-security-news-articles'),
-                name: 'Cyware'
-            }, {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://thehackernews.com/'),
-                name: 'THN Extra'
-            }, {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://www.infosecurity-magazine.com/news/'),
-                name: 'Infosec Magazine'
-            }, {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://portswigger.net/daily-swig'),
-                name: 'The Daily Swig'
-            }];
-
-            const htmlPromises = htmlSources.map(async (src) => {
-                try {
-                    const data = await fetchWithProxy(src.url);
-                    if (data) return parseHTMLArticles(data, src.url, src.name);
-                    return [];
-                } catch (e) { return []; }
-            });
-
-            // CTF siteleri
-            const ctfSources = [{
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://ctftime.org/event/list/upcoming'),
-                name: 'CTFtime Upcoming'
-            }, {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://ctftime.org/event/list/?limit=50'),
-                name: 'CTFtime All'
-            }, {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://www.hackthebox.com/events'),
-                name: 'HTB Events'
-            }];
-
-            const ctfPromises = ctfSources.map(async (src) => {
-                try {
-                    const data = await fetchWithProxy(src.url);
-                    if (data) {
-                        const articles = parseHTMLArticles(data, src.url, src.name);
-                        articles.forEach(a => { a.type = 'ctf'; });
-                        return articles;
-                    }
-                    return [];
-                } catch (e) { return []; }
-            });
-
-            const results = await Promise.allSettled([...rssPromises, ...htmlPromises, ...ctfPromises]);
-
-            results.forEach(res => {
-                if (res.status === 'fulfilled' && Array.isArray(res.value)) {
-                    allFetched.push(...res.value);
-                }
-            });
-
-            // Deduplicate by title
-            const seen = new Set();
-            const unique = [];
-            allFetched.forEach(item => {
-                const key = item.title.toLowerCase().trim();
-                if (!seen.has(key) && item.title.length > 3) {
-                    seen.add(key);
-                    unique.push(item);
-                }
-            });
-
-            state.allNews = unique;
-
-            // KNOWN CTF EVENTS ekle
-            KNOWN_CTF_EVENTS.forEach(ctf => {
-                state.allCtfEvents.push({
-                    title: ctf.title,
-                    link: ctf.link,
-                    description: ctf.description || ctf.platform || '-',
-                    pubDate: ctf.date,
-                    endDate: ctf.endDate,
-                    source: ctf.source,
-                    country: ctf.country,
-                    platform: ctf.platform,
-                    categories: ['CTF', 'Etkinlik'],
-                    type: 'ctf'
-                });
-            });
-
-            document.getElementById('loading-section').classList.add('hidden');
-            state.isLoading = false;
-            applyFilters();
-            updateDashboardStats();
-        }
-
-        // ============================================================
-        // FILTERING & RENDERING
-        // ============================================================
-        function applyFilters() {
-            const country = document.getElementById('country-select').value;
-            const timeRange = document.getElementById('time-select').value;
-            const category = document.getElementById('category-select').value;
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const ctfOnly = state.ctfOnly;
-            const activeTab = state.activeTab;
-
-            state.country = country;
-            state.timeRange = timeRange;
-            state.category = category;
-            state.search = search;
-
-            // Determine cutoff date
-            const now = new Date();
-            let cutoff = new Date(now);
-            switch (timeRange) {
-                case 'day':
-                    cutoff.setDate(now.getDate() - 1);
-                    break;
-                case 'week':
-                    cutoff.setDate(now.getDate() - 7);
-                    break;
-                case 'month':
-                    cutoff.setDate(now.getDate() - 30);
-                    break;
-                case '3months':
-                    cutoff.setDate(now.getDate() - 90);
-                    break;
-                case 'year':
-                    cutoff.setDate(now.getDate() - 365);
-                    break;
-                default:
-                    cutoff.setDate(now.getDate() - 7);
-            }
-
-            // Combine news + CTF events
-            let combined = [...state.allNews, ...state.allCtfEvents];
-
-            // Filter by time
-            combined = combined.filter(item => {
-                let d;
-                if (item.pubDate) {
-                    d = new Date(item.pubDate);
-                    if (isNaN(d.getTime())) d = new Date();
-                } else {
-                    d = new Date();
-                }
-                // For CTF events, check if endDate is in future (show upcoming)
-                if (item.type === 'ctf' && item.endDate) {
-                    const end = new Date(item.endDate);
-                    if (!isNaN(end.getTime())) {
-                        // Show if event hasn't ended yet
-                        return end >= new Date(now.getTime() - 86400000);
-                    }
-                }
-                return d >= cutoff;
-            });
-
-            // Filter by country
-            if (country !== 'all') {
-                combined = combined.filter(item => {
-                    if (item.country === country) return true;
-                    if (item.country === 'all' || !item.country) {
-                        // Check categories or description for country hints
-                        const text = (item.title + ' ' + item.description + ' ' + (item.categories || []).join(' '))
-                            .toLowerCase();
-                        const countryMap = {
-                            'TR': ['türkiye', 'turkey', 'istanbul', 'ankara', 'baykar', 'aselsan', 'stm', 'cscturkey',
-                                'bsides ist'
-                            ],
-                            'US': ['united states', 'usa', 'america', 'def con', 'las vegas', 'nyu', 'cmu', 'rit'],
-                            'KR': ['korea', 'south korea', 'seoul', 'codegate', 'samsung'],
-                            'JP': ['japan', 'tokyo', 'seccon', 'codeblue', 'wanictf'],
-                            'AZ': ['azerbaijan', 'azerbaijan', 'bakü', 'baku', 'cyberwarforce', 'cyberweek'],
-                            'DE': ['germany', 'alman', 'faust', 'dragonsector', 'hamburg'],
-                            'IN': ['india', 'hint', 'nullcon', '0x41414141'],
-                            'RU': ['russia', 'rusya', 'ctfzone', 'bushwhackers'],
-                            'CN': ['china', 'çin', 'bytectf', 'beijing'],
-                            'TW': ['taiwan', 'tayvan', 'balsn', 'bamboofox', 'mocsctf'],
-                            'GB': ['uk', 'united kingdom', 'london', 'england'],
-                            'FR': ['france', 'fransa', 'paris'],
-                            'IL': ['israel', 'israil', 'tel aviv'],
-                            'SG': ['singapore', 'singapur'],
-                            'ID': ['indonesia', 'endonezya', 'hacktoday'],
-                            'PK': ['pakistan', 'pasc'],
-                            'MY': ['malaysia', 'malezya', 'tmctf'],
-                            'FI': ['finland', 'finlandiya', 'kaishack'],
-                            'LU': ['luxembourg', 'lüksemburg', 'hack.lu'],
-                            'MA': ['morocco', 'fas', 'zh3r0'],
-                            'BD': ['bangladesh', 'bangladeş', 'knightctf'],
-                            'RO': ['romania', 'romanya', 'tfc'],
-                            'IT': ['italy', 'italya', 'srdnlen'],
-                            'BR': ['brazil', 'brezilya', 'basis'],
-                            'all': []
-                        };
-                        const hints = countryMap[country] || [];
-                        for (const h of hints) {
-                            if (text.includes(h)) return true;
-                        }
-                        return false;
-                    }
-                    // Check if article content mentions country
-                    const text = (item.title + ' ' + item.description).toLowerCase();
-                    const countryMap = {
-                        'TR': ['türkiye', 'turkey', 'istanbul', 'ankara', 'turkish', 'cscturkey'],
-                        'US': ['united states', 'usa', 'america', 'def con', 'las vegas'],
-                        'KR': ['korea', 'south korea', 'seoul'],
-                        'JP': ['japan', 'tokyo'],
-                        'AZ': ['azerbaijan', 'azerbaycan', 'baku', 'bakü'],
-                        'DE': ['germany', 'alman'],
-                        'IN': ['india', 'hint'],
-                        'RU': ['russia', 'rusya'],
-                        'CN': ['china', 'çin'],
-                        'TW': ['taiwan', 'tayvan'],
-                        'GB': ['uk', 'united kingdom', 'london'],
-                        'FR': ['france', 'fransa', 'paris'],
-                        'IL': ['israel', 'israil'],
-                        'SG': ['singapore'],
-                        'ID': ['indonesia'],
-                        'PK': ['pakistan'],
-                        'MY': ['malaysia'],
-                        'FI': ['finland'],
-                        'LU': ['luxembourg'],
-                        'MA': ['morocco'],
-                        'BD': ['bangladesh'],
-                        'RO': ['romania'],
-                        'IT': ['italy'],
-                        'BR': ['brazil'],
-                    };
-                    const hints = countryMap[country] || [];
-                    for (const h of hints) {
-                        if (text.includes(h)) return true;
-                    }
-                    return false;
-                });
-            }
-
-            // Filter by category
-            if (category !== 'all') {
-                const catKeywords = {
-                    'vulnerability': ['cve', 'vulnerability', 'güvenlik açığı', 'security flaw', 'patch', 'advisory',
-                        'zero-day', 'exploit'
-                    ],
-                    'malware': ['malware', 'kötü amaçlı', 'trojan', 'ransomware', 'botnet', 'backdoor', 'worm', 'virüs'],
-                    'ctf': ['ctf', 'capture the flag', 'jeopardy', 'attack-defense', 'hackathon', 'yarışma'],
-                    'conference': ['conference', 'konferans', 'summit', 'bsides', 'def con', 'black hat', 'meetup'],
-                    'ransomware': ['ransomware', 'fidye', 'lockbit', 'hive', 'blackcat', 'clop', 'ransom'],
-                    'hacktivism': ['hacktivism', 'anonymous', 'hacktivist', 'siber saldırı', 'ddos', 'leak'],
-                    'breach': ['breach', 'data breach', 'veri ihlali', 'leak', 'sızıntı', 'exposed', 'hack'],
-                    'zero-day': ['zero-day', '0-day', '0day', 'gün sıfır'],
-                    'ai-security': ['ai security', 'machine learning', 'yapay zeka', 'llm', 'chatgpt', 'ai güvenlik'],
-                    'iot': ['iot', 'internet of things', 'scada', 'endüstriyel', 'industrial', 'ot'],
-                    'pentest-tools': ['pentest', 'penetration test', 'hacking tool', 'exploit', 'framework', 'burp',
-                        'nmap', 'metasploit'
-                    ],
-                    'bug-bounty': ['bug bounty', 'hackerone', 'bugcrowd', 'intigriti', 'ödül', 'reward', 'bounty']
-                };
-                const keywords = catKeywords[category] || [];
-                combined = combined.filter(item => {
-                    const text = (item.title + ' ' + item.description + ' ' + (item.categories || []).join(' '))
-                        .toLowerCase();
-                    for (const kw of keywords) {
-                        if (text.includes(kw)) return true;
-                    }
-                    return false;
-                });
-            }
-
-            // Filter by search
-            if (search) {
-                combined = combined.filter(item => {
-                    const text = (item.title + ' ' + item.description + ' ' + (item.source || '')).toLowerCase();
-                    return text.includes(search);
-                });
-            }
-
-            // CTF only mode
-            if (ctfOnly) {
-                combined = combined.filter(item => item.type === 'ctf');
-            }
-
-            // Tab filter
-            if (activeTab !== 'all') {
-                if (activeTab === 'ctf') {
-                    combined = combined.filter(item => item.type === 'ctf');
-                } else {
-                    combined = combined.filter(item => {
-                        const catKeywords = {
-                            'vulnerability': ['cve', 'vulnerability', 'güvenlik açığı', 'security flaw', 'patch',
-                                'advisory'
-                            ],
-                            'malware': ['malware', 'kötü amaçlı', 'trojan', 'ransomware'],
-                            'conference': ['conference', 'konferans', 'summit', 'bsides', 'def con', 'black hat'],
-                            'breach': ['breach', 'data breach', 'veri ihlali', 'leak', 'sızıntı'],
-                        };
-                        const keywords = catKeywords[activeTab] || [];
-                        const text = (item.title + ' ' + item.description + ' ' + (item.categories || []).join(' '))
-                            .toLowerCase();
-                        for (const kw of keywords) {
-                            if (text.includes(kw)) return true;
-                        }
-                        return false;
-                    });
-                }
-            }
-
-            // Separate CTF events for spotlight
-            const ctfEvents = combined.filter(item => item.type === 'ctf').sort((a, b) => {
-                const da = new Date(a.pubDate || a.endDate || '2027-01-01');
-                const db = new Date(b.pubDate || b.endDate || '2027-01-01');
-                return da - db;
-            });
-
-            // Sort news by date (most recent first)
-            const newsItems = combined.filter(item => item.type !== 'ctf').sort((a, b) => {
-                const da = new Date(a.pubDate || 0);
-                const db = new Date(b.pubDate || 0);
-                return db - da;
-            });
-
-            const finalSorted = [...ctfEvents, ...newsItems];
-
-            state.filteredNews = finalSorted;
-            state.displayedCount = 0;
-
-            renderCTFSpotlight(ctfEvents);
-            renderNews();
-            updateResultCount(finalSorted.length);
-            updateDashboardStats();
-        }
-
-        function renderCTFSpotlight(ctfEvents) {
-            const section = document.getElementById('ctf-spotlight-section');
-            const grid = document.getElementById('ctf-spotlight-grid');
-            const badge = document.getElementById('ctf-count-badge');
-
-            const upcoming = ctfEvents.filter(e => {
-                const end = new Date(e.endDate || e.pubDate || '2027-12-31');
-                return end >= new Date();
-            }).slice(0, 6);
-
-            if (upcoming.length === 0) {
-                section.classList.add('hidden');
-                return;
-            }
-
-            section.classList.remove('hidden');
-            badge.textContent = `(${ctfEvents.length} toplam)`;
-
-            grid.innerHTML = upcoming.map(ctf => {
-                const dateStr = ctf.pubDate ? new Date(ctf.pubDate).toLocaleDateString('tr-TR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }) : 'Tarih belirtilmemiş';
-                <!-- Continued from where we left off - completing the CTF spotlight card generation -->
-
-grid.innerHTML = upcoming.map(ctf => {
-    const startDate = ctf.pubDate ? new Date(ctf.pubDate).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Tarih?';
-    const endDate = ctf.endDate ? new Date(ctf.endDate).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-    const countryFlag = ctf.country === 'all' ? '🌍' : (ctf.country === 'TR' ? '🇹🇷' : ctf.country === 'AZ' ? '🇦🇿' : ctf.country === 'KR' ? '🇰🇷' : ctf.country === 'JP' ? '🇯🇵' : ctf.country === 'US' ? '🇺🇸' : ctf.country === 'DE' ? '🇩🇪' : ctf.country === 'IN' ? '🇮🇳' : ctf.country === 'RU' ? '🇷🇺' : ctf.country === 'CN' ? '🇨🇳' : ctf.country === 'TW' ? '🇹🇼' : ctf.country === 'GB' ? '🇬🇧' : ctf.country === 'FR' ? '🇫🇷' : ctf.country === 'IL' ? '🇮🇱' : ctf.country === 'SG' ? '🇸🇬' : ctf.country === 'ID' ? '🇮🇩' : ctf.country === 'PK' ? '🇵🇰' : ctf.country === 'MY' ? '🇲🇾' : ctf.country === 'FI' ? '🇫🇮' : ctf.country === 'RO' ? '🇷🇴' : ctf.country === 'IT' ? '🇮🇹' : ctf.country === 'BR' ? '🇧🇷' : ctf.country === 'MA' ? '🇲🇦' : ctf.country === 'BD' ? '🇧🇩' : ctf.country === 'LU' ? '🇱🇺' : ctf.country === 'AZ' ? '🇦🇿' : '🌍');
-
-    return `
-        <div class="bg-gray-900 bg-opacity-80 border border-cyan-900 rounded-xl p-4 card-hover cursor-pointer" onclick="window.open('${ctf.link}','_blank')">
-            <div class="flex items-start justify-between mb-2">
-                <span class="cat-badge bg-cyan-900 text-cyan-300 border border-cyan-700">CTF</span>
-                <span class="text-lg">${countryFlag}</span>
-            </div>
-            <h3 class="text-sm font-bold text-cyan-300 mb-1 mono leading-tight">${ctf.title}</h3>
-            <p class="text-xs text-gray-500 mb-2 line-clamp-2">${ctf.description || ctf.platform || ''}</p>
-            <div class="flex items-center justify-between text-xs text-gray-600">
-                <span><i class="far fa-calendar mr-1"></i>${startDate}${endDate ? ' - ' + endDate : ''}</span>
-                <span class="mono text-cyan-700">${ctf.source || ''}</span>
-            </div>
-        </div>
-    `;
-}).join('');
-}
-
-function renderNews() {
-const grid = document.getElementById('news-grid');
-const items = state.filteredNews;
-const start = state.displayedCount;
-const end = Math.min(start + state.pageSize, items.length);
-
-if (start === 0) {
-    grid.innerHTML = '';
-}
-
-if (items.length === 0) {
-    grid.innerHTML = `
-        <div class="col-span-full text-center py-16">
-            <i class="fas fa-search text-4xl text-gray-700 mb-4"></i>
-            <p class="mono text-gray-500">Sonuç bulunamadı. Farklı filtreler deneyin.</p>
-        </div>
-    `;
-    document.getElementById('load-more-section').classList.add('hidden');
-    return;
-}
-
-for (let i = start; i < end; i++) {
-    const item = items[i];
-    const isCtf = item.type === 'ctf';
-    const dateStr = item.pubDate ? new Date(item.pubDate).toLocaleDateString('tr-TR', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-    
-    // Determine category badge
-    let badgeClass = 'bg-gray-800 text-gray-400 border border-gray-700';
-    let badgeText = 'Haber';
-    if (isCtf) {
-        badgeClass = 'bg-cyan-900 text-cyan-300 border border-cyan-700';
-        badgeText = '🏴 CTF';
-    } else {
-        const text = (item.title + ' ' + item.description).toLowerCase();
-        if (text.includes('cve') || text.includes('vulnerability') || text.includes('zero-day')) {
-            badgeClass = 'bg-red-900 text-red-300 border border-red-700';
-            badgeText = '💀 CVE';
-        } else if (text.includes('ransomware') || text.includes('fidye')) {
-            badgeClass = 'bg-orange-900 text-orange-300 border border-orange-700';
-            badgeText = '💰 Ransomware';
-        } else if (text.includes('breach') || text.includes('ihlal') || text.includes('leak') || text.includes('sızıntı')) {
-            badgeClass = 'bg-yellow-900 text-yellow-300 border border-yellow-700';
-            badgeText = '🔓 Breach';
-        } else if (text.includes('malware') || text.includes('trojan') || text.includes('botnet')) {
-            badgeClass = 'bg-purple-900 text-purple-300 border border-purple-700';
-            badgeText = '🦠 Malware';
-        } else if (text.includes('conference') || text.includes('konferans') || text.includes('summit') || text.includes('bsides')) {
-            badgeClass = 'bg-blue-900 text-blue-300 border border-blue-700';
-            badgeText = '🎤 Konferans';
-        }
-    }
-
-    const card = `
-        <div class="bg-gray-900 bg-opacity-60 border border-gray-800 rounded-xl overflow-hidden card-hover ${isCtf ? 'border-l-2 border-l-cyan-500' : ''}">
-            <div class="p-5">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="cat-badge ${badgeClass}">${badgeText}</span>
-                    <span class="mono text-xs text-gray-600">${dateStr}</span>
-                </div>
-                <h3 class="text-sm font-semibold text-gray-100 mb-2 leading-relaxed line-clamp-2 hover:text-green-400 transition cursor-pointer" onclick="window.open('${item.link}','_blank')">
-                    ${item.title}
-                </h3>
-                <p class="text-xs text-gray-500 line-clamp-3 mb-3">${item.description || 'Detay bulunamadı.'}</p>
-                <div class="flex items-center justify-between">
-                    <span class="mono text-xs text-gray-700">${item.source || 'Bilinmiyor'}</span>
-                    <a href="${item.link}" target="_blank" class="text-xs text-green-600 hover:text-green-400 transition mono">
-                        <i class="fas fa-external-link-alt mr-1"></i>Devamı
-                    </a>
-                </div>
-            </div>
-        </div>
-    `;
-    grid.innerHTML += card;
-}
-
-state.displayedCount = end;
-
-if (end < items.length) {
-    document.getElementById('load-more-section').classList.remove('hidden');
-} else {
-    document.getElementById('load-more-section').classList.add('hidden');
-}
-}
-
-function updateResultCount(count) {
-document.getElementById('result-count').textContent = count + ' sonuç';
-}
-
-function updateDashboardStats() {
-const ctfCount = state.allCtfEvents.length;
-const newsCount = state.allNews.length;
-document.getElementById('news-count').textContent = state.filteredNews.length;
-document.getElementById('footer-ctf-count').textContent = ctfCount;
-document.getElementById('footer-news-count').textContent = newsCount;
-}
-
-// ============================================================
-// EVENT LISTENERS
-// ============================================================
-document.getElementById('country-select').addEventListener('change', applyFilters);
-document.getElementById('time-select').addEventListener('change', applyFilters);
-document.getElementById('category-select').addEventListener('change', applyFilters);
-document.getElementById('search-input').addEventListener('input', (e) => {
-clearTimeout(window.searchTimeout);
-window.searchTimeout = setTimeout(applyFilters, 400);
-});
-
-document.getElementById('ctf-only-btn').addEventListener('click', () => {
-state.ctfOnly = !state.ctfOnly;
-const btn = document.getElementById('ctf-only-btn');
-if (state.ctfOnly) {
-    btn.classList.add('bg-cyan-900', 'bg-opacity-30', 'border-cyan-500');
-    btn.classList.remove('border-cyan-700');
-} else {
-    btn.classList.remove('bg-cyan-900', 'bg-opacity-30', 'border-cyan-500');
-    btn.classList.add('border-cyan-700');
-}
-applyFilters();
-});
-
-document.getElementById('refresh-btn').addEventListener('click', () => {
-fetchAllData();
-});
-
-document.getElementById('load-more-btn').addEventListener('click', renderNews);
-
-// Tab buttons
-document.querySelectorAll('.tab-btn').forEach(btn => {
-btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('active', 'text-green-400', 'border-green-400');
-        b.classList.add('text-gray-500');
-        b.style.borderBottomColor = 'transparent';
-    });
-    btn.classList.add('active', 'text-green-400', 'border-green-400');
-    btn.classList.remove('text-gray-500');
-    btn.style.borderBottomColor = '#00ff44';
-
-    state.activeTab = btn.dataset.tab;
-    applyFilters();
-});
-});
-
-// ============================================================
-// INIT
-// ============================================================
-fetchAllData();
-
-// Auto refresh every 5 minutes
-setInterval(fetchAllData, 300000);
-
-console.log('CyberSecTR v3.0 initialized');
-console.log('🔒 Güvenlik araştırmacıları için tasarlandı');
-console.log(`📡 ${KNOWN_CTF_EVENTS.length} CTF etkinliği kayıtlı`);
-console.log('🌍 30+ ülke desteği');
-</script>
-
+    <script src="i18n.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
